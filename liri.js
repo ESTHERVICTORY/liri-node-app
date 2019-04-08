@@ -44,17 +44,17 @@ function concert_this() {
         var concerts = JSON.parse(body);
         for (var i = 0; i < concerts.length; i++) {  
             console.log("**********EVENT INFO*********");  
-            fs.appendFileSync("log.txt", "**********EVENT INFO*********\n");//Append in log.txt file
             console.log(i);
-            fs.appendFileSync("log.txt", i+"\n");
             console.log("Name of the Venue: " + concerts[i].venue.name);
-            fs.appendFileSync("log.txt", "Name of the Venue: " + concerts[i].venue.name+"\n");
             console.log("Venue Location: " +  concerts[i].venue.city);
-            fs.appendFileSync("log.txt", "Venue Location: " +  concerts[i].venue.city+"\n");
             console.log("Date of the Event: " +  concerts[i].datetime);
-            fs.appendFileSync("log.txt", "Date of the Event: " +  concerts[i].datetime+"\n");
             console.log("*****************************");
-            fs.appendFileSync("log.txt", "*****************************"+"\n");
+
+            var newConcert = "********New Movie Entry***********" +response.data.Title;
+
+            fs.appendFile("log.txt",newConcert,function (error){
+                if(error) return (error);
+            });
         }
     } else{
       console.log('Error occurred.');
@@ -73,6 +73,12 @@ function spotify_this_song() {
         console.log("Song Name: "+data.tracks.items[0].name);
         console.log("Song Demo Link: "+data.tracks.items[0].href);
         console.log("Song Name: "+data.tracks.items[0].album.name);
+
+        var newSpotify = "********Spotify Entry***********" +response.data.Title;
+
+        fs.appendFile("log.txt",newSpotify,function (error){
+            if(error) return (error);
+        });
     })
 };
 
@@ -119,4 +125,4 @@ function random() {
 
       };
     });
-};
+}};
