@@ -18,7 +18,7 @@ var response = process.argv[2];
 var selection = JSON.stringify(process.argv[3]);
 
 // 9. Make it so liri.js can take in one of the following commands:
-function command(response, selection) {
+ {
     switch (response) {
         case `concert-this`: concert_this(selection);
             break;
@@ -31,13 +31,35 @@ function command(response, selection) {
         default: console.log("Invalid Input");
             break;
     }
-}
+
 //Each functions
 //    * `concert-this`
 
 function concert_this() {
-    console.log("work");
-}
+    //This will search the Bands in Town Artist Events API (`https://rest.bandsintown.com/artists/${artist}/events?app_id=codingbootcamp`) for an artist and render the following information about each event to the terminal:
+    var queryUrl = "https://rest.bandsintown.com/artists/" + inputParameter + "/events?app_id=codingbootcamp";
+    request(queryUrl, function(error, response, body) {
+  
+    if (!error && response.statusCode === 200) {
+        var concerts = JSON.parse(body);
+        for (var i = 0; i < concerts.length; i++) {  
+            console.log("**********EVENT INFO*********");  
+            fs.appendFileSync("log.txt", "**********EVENT INFO*********\n");//Append in log.txt file
+            console.log(i);
+            fs.appendFileSync("log.txt", i+"\n");
+            console.log("Name of the Venue: " + concerts[i].venue.name);
+            fs.appendFileSync("log.txt", "Name of the Venue: " + concerts[i].venue.name+"\n");
+            console.log("Venue Location: " +  concerts[i].venue.city);
+            fs.appendFileSync("log.txt", "Venue Location: " +  concerts[i].venue.city+"\n");
+            console.log("Date of the Event: " +  concerts[i].datetime);
+            fs.appendFileSync("log.txt", "Date of the Event: " +  concerts[i].datetime+"\n");
+            console.log("*****************************");
+            fs.appendFileSync("log.txt", "*****************************"+"\n");
+        }
+    } else{
+      console.log('Error occurred.');
+    }
+});}
 //    * `spotify-this-song`   
 function spotify_this_song() {
     var songName = "What's My Age Again";// by blink-82
@@ -61,28 +83,40 @@ function movie_this() {
     }
 var movieQueryUrl = "http:www.omcbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
 
-// axios.request(movieQueryUrl).then{
-//     function(response){
-//         console.log(" ************Movie Response **************");
-//         console.log(" Movie Title: " +response.data.Title);
-//         console.log(" Release Date: " +response.data.Year);
-//         console.log(" IMDB Rating: " +response.data.Rating);
-//         console.log(" Country Produced: " +response.data.Country);
-//         console.log(" Language: " +response.data.Language);
-//         console.log(" Plot: " +response.data.Plot);
-//         console.log(" List of Actors: " +response.data.Actors);
+axios.request(movieQueryUrl).then{
+    function(response){
+        console.log(" ************Movie Response **************");
+        console.log(" Movie Title: " +response.data.Title);
+        console.log(" Release Date: " +response.data.Year);
+        console.log(" IMDB Rating: " +response.data.Rating);
+        console.log(" Country Produced: " +response.data.Country);
+        console.log(" Language: " +response.data.Language);
+        console.log(" Plot: " +response.data.Plot);
+        console.log(" List of Actors: " +response.data.Actors);
 
-//         var logMovie = "********New Movie Entry***********" +response.data.Title;
+        var logMovie = "********New Movie Entry***********" +response.data.Title;
 
-//         fs.appendFile("log.txt",logMovie,function (error){
-//             if(error) return (error);
-//         });
-//     }
-// };
-// }
-//    * `do-what-it-says`
+        fs.appendFile("log.txt",logMovie,function (error){
+            if(error) return (error);
+        });
+    }
+};
+};
+   //* `do-what-it-says`
 function do_what_it_says() {
 
 }
 
+//random text part
+function random() {
+    fs.readFile('random.txt', 'utf8', function (error, data) {
+        var dataArr = data.split(',');
 
+        if (error) {
+            return console.log(error);
+        } else {
+            console.log(data);
+
+      };
+    });
+};
