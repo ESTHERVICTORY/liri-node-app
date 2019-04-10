@@ -18,7 +18,6 @@ var response = process.argv[2];
 var selection = JSON.stringify(process.argv[3]);
 
 // 9. Make it so liri.js can take in one of the following commands:
- {
     switch (response) {
         case `concert-this`: concert_this(selection);
             break;
@@ -83,13 +82,13 @@ function spotify_this_song() {
 };
 
 //    * `movie-this`
-function movie_this() {
+function movie_this(movie) {
     if (!movie) {
         movie = "Mr. Nobody";
     }
-var movieQueryUrl = "http:www.omcbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
+var movieQueryUrl = `http://www.omdbapi.com/?t=${movie}&y=&plot=short&apikey=trilogy`;
 
-axios.request(movieQueryUrl).then{
+axios.get(movieQueryUrl).then(
     function(response){
         console.log(" ************Movie Response **************");
         console.log(" Movie Title: " +response.data.Title);
@@ -105,14 +104,12 @@ axios.request(movieQueryUrl).then{
         fs.appendFile("log.txt",logMovie,function (error){
             if(error) return (error);
         });
-    }
-};
+    });
 };
    //* `do-what-it-says`
 function do_what_it_says() {
-
+    
 }
-
 //random text part
 function random() {
     fs.readFile('random.txt', 'utf8', function (error, data) {
@@ -122,7 +119,6 @@ function random() {
             return console.log(error);
         } else {
             console.log(data);
-
       };
     });
-}};
+};
