@@ -34,7 +34,7 @@ var selection = JSON.stringify(process.argv[3]);
 //Each functions
 //    * `concert-this`
 
-function concert_this() {
+function concert_this(response) {
     //This will search the Bands in Town Artist Events API (`https://rest.bandsintown.com/artists/${artist}/events?app_id=codingbootcamp`) for an artist and render the following information about each event to the terminal:
     var queryUrl = "https://rest.bandsintown.com/artists/" + inputParameter + "/events?app_id=codingbootcamp";
     request(queryUrl, function(error, response, body) {
@@ -49,7 +49,7 @@ function concert_this() {
             console.log("Date of the Event: " +  concerts[i].datetime);
             console.log("*****************************");
 
-            var newConcert = "********New Movie Entry***********" +response.data.Title;
+            var newConcert = "********New Concert Entry***********" +response.data.Title;
 
             fs.appendFile("log.txt",newConcert,function (error){
                 if(error) return (error);
@@ -60,15 +60,18 @@ function concert_this() {
     }
 });}
 //    * `spotify-this-song`   
-function spotify_this_song() {
-    var songName = "What's My Age Again";// by blink-82
+function spotify_this_song(songName) {
+    if (!songName) {
+        songName = "What's My Age Again";// by blink-82
+    }
+   // var songName = "What's My Age Again";
 
     spotify.search({type: "track ", query:songName}, function (error,data){
         if(error){
             return console.log("There is error  "+ error );
         }
         console.log(" ************Spotify Response **************");
-        console.log("Artist Name: "+data.tracks.items[0].album.artist[0].name);
+        console.log("Artist Name: "+data.tracks.items[0].album.artist[0].name); 
         console.log("Song Name: "+data.tracks.items[0].name);
         console.log("Song Demo Link: "+data.tracks.items[0].href);
         console.log("Song Name: "+data.tracks.items[0].album.name);
@@ -99,9 +102,9 @@ axios.get(movieQueryUrl).then(
         console.log(" Plot: " +response.data.Plot);
         console.log(" List of Actors: " +response.data.Actors);
 
-        var logMovie = "********New Movie Entry***********" +response.data.Title;
-
-        fs.appendFile("log.txt",logMovie,function (error){
+        var logMovie = "********New Movie Entry***********" +response.data.Title +" Release Date: " +response.data.Year + " IMDB Rating: " +response.data.Rating;
+        
+        fs.appendFile("log.txt",logMovie,response, function (error){
             if(error) return (error);
         });
     });
@@ -111,7 +114,7 @@ function do_what_it_says() {
     
 }
 //random text part
-function random() {
+function random(do_what_it_says) {
     fs.readFile('random.txt', 'utf8', function (error, data) {
         var dataArr = data.split(',');
 
@@ -119,6 +122,7 @@ function random() {
             return console.log(error);
         } else {
             console.log(data);
+        
       };
     });
 };
