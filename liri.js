@@ -34,9 +34,9 @@ var selection = JSON.stringify(process.argv[3]);
 //Each functions
 //    * `concert-this`
 
-function concert_this(response) {
+function concert_this(selection) {
     //This will search the Bands in Town Artist Events API (`https://rest.bandsintown.com/artists/${artist}/events?app_id=codingbootcamp`) for an artist and render the following information about each event to the terminal:
-    var queryUrl = "https://rest.bandsintown.com/artists/" + inputParameter + "/events?app_id=codingbootcamp";
+    var queryUrl = "http://www.artists.bandsintown.com/bandsintown-api" + selection + "/events?app_id=codingbootcamp";
     request(queryUrl, function(error, response, body) {
   
     if (!error && response.statusCode === 200) {
@@ -59,29 +59,42 @@ function concert_this(response) {
       console.log('Error occurred.');
     }
 });}
-//    * `spotify-this-song`   
-function spotify_this_song(songName) {
-    if (!songName) {
-        songName = "What's My Age Again";// by blink-82
+//    * `spotify-this-song`  
+ // var songName = "What's My Age Again"; 
+ function spotify_this_song(selection) {
+    if (selection === undefined) {
+        selection = "What's My Age Again"; 
     }
-   // var songName = "What's My Age Again";
+    spotify.search(
+        {
+            type: "track",
+            query: selection
+        },
+        function (err, data) {
+            if (err) {
+                console.log("Error occurred: " + err);
+                return;
+            }
+            var songs = data.tracks.items;
 
-    spotify.search({type: "track ", query:songName}, function (error,data){
-        if(error){
-            return console.log("There is error  "+ error );
+            for (var i = 0; i < songs.length; i++) {
+                console.log("**********SONG INFO*********");
+                fs.appendFileSync("log.txt", "**********SONG INFO*********\n");
+                console.log(i);
+                fs.appendFileSync("log.txt", i +"\n");
+                console.log("Song name: " + songs[i].name);
+                fs.appendFileSync("log.txt", "song name: " + songs[i].name +"\n");
+                console.log("Preview song: " + songs[i].preview_url);
+                fs.appendFileSync("log.txt", "preview song: " + songs[i].preview_url +"\n");
+                console.log("Album: " + songs[i].album.name);
+                fs.appendFileSync("log.txt", "album: " + songs[i].album.name + "\n");
+                console.log("Artist(s): " + songs[i].artists[0].name);
+                fs.appendFileSync("log.txt", "artist(s): " + songs[i].artists[0].name + "\n");
+                console.log("*****************************");  
+                fs.appendFileSync("log.txt", "*****************************\n");
+             }
         }
-        console.log(" ************Spotify Response **************");
-        console.log("Artist Name: "+data.tracks.items[0].album.artist[0].name); 
-        console.log("Song Name: "+data.tracks.items[0].name);
-        console.log("Song Demo Link: "+data.tracks.items[0].href);
-        console.log("Song Name: "+data.tracks.items[0].album.name);
-
-        var newSpotify = "********Spotify Entry***********" +response.data.Title;
-
-        fs.appendFile("log.txt",newSpotify,function (error){
-            if(error) return (error);
-        });
-    })
+    );
 };
 
 //    * `movie-this`
